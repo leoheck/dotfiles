@@ -213,7 +213,7 @@ then
     fi
 
     fancy_echo "Installing Rust"
-    rustup-init -y # Installs the default toolchain
+    sudo rustup-init -y
     echo "export PATH=$PATH:$HOME/.cargo/bin" >> ~/.zshrc
     export PATH=$PATH:$HOME/.cargo/bin
     rustup toolchain add nightly
