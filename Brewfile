@@ -37,8 +37,6 @@ brew 'kubernetes-cli'
 brew 'the_silver_searcher'
 brew 'diff-so-fancy'
 
-cask 'google-chrome'
-
 mas 'Numbers', id: 409203825
 mas 'Pages', id: 409201541
 mas 'Slack', id: 803453959
