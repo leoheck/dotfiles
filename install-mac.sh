@@ -63,7 +63,8 @@ parse_cli()
 
 fancy_echo()
 {
-    printf "\n\n>> %s\n =====================================================" "$@"
+    printf "\n\n>> %s\n" "$@"
+    printf "=====================================================\n"
 }
 
 set_hostname()
@@ -197,7 +198,6 @@ then
     rustup update
     echo "export RUST_SRC_PATH=$(rustc --print sysroot)/lib/rustlib/src/rust/src" >> ~/.zshrc
 
-
     fancy_echo "Installing asdf"
     if [ ! -d "$HOME/.asdf" ]
     then
@@ -212,6 +212,7 @@ then
     find_latest_asdf() {
         asdf list-all "$1" | grep -v - | tail -1 | sed -e 's/^ *//'
     }
+
     asdf_plugin_present() {
         $(asdf plugin-list | grep "$1" > /dev/null)
         return $?
