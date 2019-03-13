@@ -94,7 +94,7 @@ config()
     /usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME $@
 }
 
-if [ $MAC_DEFAULT_SETTINGS ]
+if [[ "$MAC_DEFAULT_SETTINGS" == "1" ]]
 then
     fancy_echo "Configuring default MAC look and feel"
 
@@ -119,9 +119,9 @@ then
     killall Dock
 fi
 
-fancy_echo "Installing oh-my-zsh"
 if [ ! -d "$HOME/.oh-my-zsh" ]
 then
+    fancy_echo "Installing oh-my-zsh"
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sed 's:env zsh -l::g' | sed 's:chsh -s .*$::g')"
 fi
 
@@ -142,7 +142,7 @@ install_asdf_plugin()
     asdf global $1 $plugin_version
 }
 
-if [ $IS_DEVELOPER ]
+if [[ "$IS_DEVELOPER" == "1" ]]
 then
     fancy_echo "Installing Homebrew ..."
     if ! command -v brew >/dev/null; then
@@ -237,16 +237,16 @@ then
     install_asdf_plugin erlang
     install_asdf_plugin elixir
 
-    fancy_echo "Installing Visual Studio Code"
     if [ ! -d "/Applications/Visual Studio Code.app" ]
     then
+        fancy_echo "Installing Visual Studio Code"
         curl -Lo "/Applications/Visual Studio Code.zip" https://update.code.visualstudio.com/1.31.1/darwin/stable
         tar -xf "/Applications/Visual Studio Code.zip"
     fi
 
-    fancy_echo "Installing Docker"
     if [ ! -d "/Applications/Docker.app" ]
     then
+        fancy_echo "Installing Docker"
         curl -Lo ~/Downloads/Docker.dmg  https://download.docker.com/mac/stable/Docker.dmg
         sudo hdiutil attach ~/Downloads/Docker.dmg
         sudo cp -R "/Volumes/Docker/Docker.app" /Applications
@@ -254,36 +254,36 @@ then
     fi
 fi
 
-fancy_echo "Installing Google Chat"
 if [ ! -d "/Applications/Chat.app" ]
 then
+    fancy_echo "Installing Google Chat"
     curl -Lo ~/Downloads/InstallHangoutsChat.dmg https://dl.google.com/chat/latest/InstallHangoutsChat.dmg
     sudo hdiutil attach ~/Downloads/InstallHangoutsChat.dmg
     sudo cp -R "/Volumes/Install Hangouts Chat/Chat.app" /Applications
     sudo hdiutil unmount "/Volumes/Install Hangouts Chat"
 fi
 
-fancy_echo "Installing GPG Suite"
 if [ ! -d "/Applications/GPG Keychain.app" ]
 then
+    fancy_echo "Installing GPG Suite"
     curl -Lo ~/Downloads/GPG_Suite-2018.5.dmg https://releases.gpgtools.org/GPG_Suite-2018.5.dmg
     sudo hdiutil attach ~/Downloads/GPG_Suite-2018.5.dmg
     sudo cp -R "/Volumes/GPG Suite/Install.app" /Applications
     sudo hdiutil unmount "/Volumes/GPG Suite"
 fi
 
-fancy_echo "Installing Google Chrome"
 if [ ! -d "/Applications/Google Chrome.app" ]
 then
+    fancy_echo "Installing Google Chrome"
     curl -Lo ~/Downloads/googlechrome.dmg https://dl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg
     sudo hdiutil attach ~/Downloads/googlechrome.dmg
     sudo cp -R "/Volumes/Google Chrome/Google Chrome.app" /Applications
     sudo hdiutil unmount "/Volumes/Google Chrome"
 fi
 
-fancy_echo "Installing Google Drive"
 if [ ! -d "/Applications/Google Drive File Stream.app" ]
 then
+    fancy_echo "Installing Google Drive"
     curl -Lo ~/Downloads/GoogleDriveFileStream.dmg https://dl.google.com/drive-file-stream/GoogleDriveFileStream.dmg
     hdiutil mount ~/Downloads/GoogleDriveFileStream.dmg
     sudo installer -pkg "/Volumes/Install Google Drive File Stream/GoogleDriveFileStream.pkg" -target "/dev/disk1s1"
