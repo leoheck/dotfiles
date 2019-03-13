@@ -37,11 +37,11 @@ parse_cli()
                 shift
                 ;;
             -d|--defaults)
-                MAC_DEFAULT_SETTINGS="1"
+                MAC_DEFAULT_SETTINGS="0"
                 shift
                 ;;
             -s|--support)
-                IS_DEVELOPER="1"
+                IS_DEVELOPER="0"
                 shift
                 ;;
             -h|--help)
@@ -94,7 +94,7 @@ config()
     /usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME $@
 }
 
-if [ $MAC_DEFAULT_SETTINGS ];
+if [ $MAC_DEFAULT_SETTINGS ]
 then
     # Tap to click
     defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
@@ -103,16 +103,16 @@ then
     sudo defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
     # Display only active applications in dock
-    defaults write com.apple.dock static-only -bool TRUE
+    defaults write com.apple.Dock static-only -bool TRUE
 
     # Enable the recent items menu
-    defaults write com.apple.dock persistent-others -array-add '{"tile-data" = {"list-type" = 1;}; "tile-type" = "recents-tile";}'
+    defaults write com.apple.Dock persistent-others -array-add '{"tile-data" = {"list-type" = 1;}; "tile-type" = "recents-tile";}'
 
     # Autohide dock
-    defaults write com.apple.dock showhidden -bool TRUE
+    defaults write com.apple.Dock showhidden -bool TRUE
 
     # Move the dock to the left
-    defaults write com.apple.dock pinning -string left
+    defaults write com.apple.Dock pinning -string left
 
     killall Dock
 fi
@@ -140,7 +140,7 @@ install_asdf_plugin()
     asdf global $1 $plugin_version
 }
 
-if [ $IS_DEVELOPER ];
+if [ $IS_DEVELOPER ]
 then
     fancy_echo "Installing Homebrew ..."
     if ! command -v brew >/dev/null; then
