@@ -122,24 +122,24 @@ then
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sed 's:env zsh -l::g' | sed 's:chsh -s .*$::g')"
 fi
 
-fancy_echo "Installing Homebrew ..."
-if ! command -v brew >/dev/null; then
-    curl -fsS \
-        'https://raw.githubusercontent.com/Homebrew/install/master/install' | ruby
-
-    config checkout $HOME/.zshrc
-
-    echo >> $HOME/.zshrc
-    echo '# Recommended by brew doctor' >> $HOME/.zshrc
-    echo 'export PATH="/usr/local/bin:$PATH"' >> $HOME/.zshrc
-    echo 'export PATH="/usr/local/sbin:$PATH"'>> $HOME/.zshrc
-
-    export PATH="/usr/local/bin:$PATH"
-    export PATH="/usr/local/sbin:$PATH"
-fi
-
 if [ $IS_DEVELOPER ];
 then
+    fancy_echo "Installing Homebrew ..."
+    if ! command -v brew >/dev/null; then
+        curl -fsS \
+            'https://raw.githubusercontent.com/Homebrew/install/master/install' | ruby
+
+        config checkout $HOME/.zshrc
+
+        echo >> $HOME/.zshrc
+        echo '# Recommended by brew doctor' >> $HOME/.zshrc
+        echo 'export PATH="/usr/local/bin:$PATH"' >> $HOME/.zshrc
+        echo 'export PATH="/usr/local/sbin:$PATH"'>> $HOME/.zshrc
+
+        export PATH="/usr/local/bin:$PATH"
+        export PATH="/usr/local/sbin:$PATH"
+    fi
+
     if [ ! -f "$HOME/.ssh/id_rsa" ]
     then
         fancy_echo "Installing git keys"
