@@ -176,26 +176,30 @@ then
         eval "$(ssh-agent -s)"
 
         touch $HOME/.ssh/config
-        echo "
+        read -r -d '' sshconfig_append <<- EOM
         Host *
             AddKeysToAgent yes
             UseKeychain yes
             IdentityFile $HOME/.ssh/id_rsa" >> $HOME/.ssh/config
+        EOM
+
+        echo "$sshconfig_append" >> $HOME/.ssh/config
 
         ssh-add -K $HOME/.ssh/id_rsa
 
         fancy_echo "Please copy your ssh public keys to github"
         open https://help.github.com/en/articles/adding-a-new-ssh-key-to-your-github-account
 
-        echo "
+        read -r -d '' gitconfig_append <<- EOM
         [user]
-    	authors:
-    	  $username: $c
+            authors:
+                $USER: $GITHUB_NAME
 
-    	email_addresses:
-    	  $username: $GITHUB_EMAIL
+            email_addresses:
+                $USER: $GITHUB_EMAIL
+        EOM
 
-         " >> $HOME/.gitconfig
+        echo "$gitconfig_append" >> $HOME/.gitconfig
         echo > ~/.git-authors
     fi
 
