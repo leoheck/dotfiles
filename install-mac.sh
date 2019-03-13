@@ -1,9 +1,57 @@
-#!/bin/sh
+#!/bin/bash
 
-# Usage: ./install-mac.sh github_name github_gmail
+read -r -d '' SCRIPT_USAGE << EOM
+USAGE:
 
-github_name="$1"
-github_email="$2"
+    ./install-mac.sh -n GITHUB_NAME -e GITHUB_EMAIL [-d|--defaults] [-c|--consulting]
+EOM
+
+export GITHUB_NAME=""
+export GITHUB_EMAIL=""
+export MAC_DEFAULT_SETTINGS="0"
+export CONFIG_FOR_CONSULTING="0"
+
+parse_cli()
+{
+    while [[ $# -gt 0 ]]
+    do
+        key="$1"
+        case $key in
+            -n|--github_name)
+                shift
+                GITHUB_NAME="$1"
+                shift
+                ;;
+            -e|--github_email)
+                shift
+                GITHUB_EMAIL="$1"
+                shift
+                ;;
+            -d|--defaults)
+                MAC_DEFAULT_SETTINGS="1"
+                shift
+                ;;
+            -c|--consulting)
+                CONFIG_FOR_CONSULTING="1"
+                shift
+                ;;
+          -h|--help)
+                printf "\n%s\n\n" "$SCRIPT_USAGE"
+                exit 1
+                ;;
+            *)
+                printf "Unknown arg: (%s)" "$1"
+                exit 1
+                ;;
+        esac
+    done
+    set -- "${POSITIONAL[@]}"
+
+    if [ "$GITHUB_NAME" == "" ]; then printf "GITHUB_NAME is missing\n"; exit 1; fi
+    if [ "$GITHUB_EMAIL" == "" ]; then printf "GITHUB_EMAIL is missing\n"; exit 1; fi
+
+    exit 0
+}
 
 fancy_echo()
 {
@@ -28,6 +76,7 @@ enable_services()
         -activate -configure -access -off -restart -agent -privs -all -allowAccessFor -allUsers
 }
 
+parse_cli "$@"
 set_hostname
 enable_services
 
@@ -36,9 +85,7 @@ config()
     /usr/bin/git --git-dir=$HOME/.cfg/ --work-tree=$HOME $@
 }
 
-fancy_echo "Would you like to configure Mac Defaults: Y/n?"
-read mac_defaults
-if [ mac_defaults == 'Y' || mac_defaults == 'y']
+if [ MAC_DEFAULT_SETTINGS == 'Y' || MAC_DEFAULT_SETTINGS == 'y']
 then
     # Setting Tap to click
     defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
@@ -46,22 +93,20 @@ then
     sudo defaults -currentHost write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
     sudo defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
-    #Display only active applications in Dock
+    # Display only active applications in Dock
     defaults write com.apple.dock static-only -bool TRUE
 
-    #Enable the Recent Items Menu
+    # Enable the Recent Items Menu
     defaults write com.apple.dock persistent-others -array-add '{"tile-data" = {"list-type" = 1;}; "tile-type" = "recents-tile";}'
 
-    #Autohide dock
+    # Autohide dock
     defaults write com.apple.dock showhidden -bool TRUE
 
-    #Add Dock on the left
+    # Add Dock on the left
     defaults write com.apple.dock pinning -string left
 
     killall Dock
-
 fi
-
 
 fancy_echo "Installing ohh-my-zsh"
 if [ ! -d "$HOME/.oh-my-zsh" ]
@@ -91,12 +136,12 @@ then
     fancy_echo "Writing to $HOME/.gitconfig"
     echo "
     [user]
-        name = $github_name
-        email = $github_email
+        name = $GITHUB_NAME
+        email = $GITHUB_EMAIL
      " >> $HOME/.gitconfig
 
     fancy_echo "Generating & configuringssh keys"
-    ssh-keygen -t rsa -b 4096 -C $github_email -N "" -f $HOME/.ssh/id_rsa
+    ssh-keygen -t rsa -b 4096 -C $GITHUB_EMAIL -N "" -f $HOME/.ssh/id_rsa
     eval "$(ssh-agent -s)"
 
     touch $HOME/.ssh/config
@@ -117,7 +162,7 @@ then
 	  $username: $c
 
 	email_addresses:
-	  $username: $github_email
+	  $username: $GITHUB_EMAIL
 
      " >> $HOME/.gitconfig
     echo > ~/.git-authors
@@ -182,8 +227,8 @@ install_asdf_plugin elixir
 fancy_echo "Installing Visual Studio Code"
 if [ ! -d "/Applications/Visual Studio Code.app" ]
 then
-    curl -Lo /Applications/Visual\ Studio\ Code.zip https://update.code.visualstudio.com/1.31.1/darwin/stable
-    tar -xf /Applications/Visual\ Studio\ Code.zip
+    curl -Lo "/Applications/Visual Studio Code.zip" https://update.code.visualstudio.com/1.31.1/darwin/stable
+    tar -xf "/Applications/Visual Studio Code.zip"
 fi
 
 fancy_echo "Installing Docker"
@@ -218,6 +263,6 @@ if [ ! -d "/Applications/Google Drive File Stream.app" ]
 then
     curl -Lo ~/Downloads/GoogleDriveFileStream.dmg https://dl.google.com/drive-file-stream/GoogleDriveFileStream.dmg
     hdiutil mount ~/Downloads/GoogleDriveFileStream.dmg
-    sudo installer -pkg /Volumes/Install\ Google\ Drive\ File\ Stream/GoogleDriveFileStream.pkg -target "/Volumes/Macintosh HD"
-    hdiutil unmount /Volumes/Install\ Google\ Drive\ File\ Stream/
+    sudo installer -pkg "/Volumes/Install Google Drive File Stream/GoogleDriveFileStream.pkg" -target "/Volumes/Macintosh HD"
+    hdiutil unmount "/Volumes/Install Google Drive File Stream/"
 fi
