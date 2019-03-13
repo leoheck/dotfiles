@@ -241,8 +241,8 @@ then
     if [ ! -d "/Applications/Visual Studio Code.app" ]
     then
         fancy_echo "Installing Visual Studio Code"
-        curl -Lo "~/Downloads/Visual Studio Code.zip" https://update.code.visualstudio.com/1.31.1/darwin/stable
-        unzip -a ~/Downloads/Visual\ Studio\ Code.zip -d /Applications
+        curl -Lo ~/Downloads/VisualStudioCode.zip https://update.code.visualstudio.com/1.31.1/darwin/stable
+        unzip -a ~/Downloads/VisualStudioCode.zip -d /Applications
     fi
 
     if [ ! -d "/Applications/Docker.app" ]
