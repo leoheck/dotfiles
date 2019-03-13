@@ -9,15 +9,15 @@ REQUIRED:
 -e GITHUB_EMAIL --- Set the github email, e.g. "munjal@deepx.it"
 
 OPTIONAL:
--d|--defaults ----- Set MAC defaults settings
--s|--support ------ Use this if the person is not a developer
+-d|--defaults ----- Disable MAC defaults settings
+-s|--support ------ Not a developer computer
 
 EOM
 
 export GITHUB_NAME=""
 export GITHUB_EMAIL=""
 
-export MAC_DEFAULT_SETTINGS="0"
+export MAC_DEFAULT_SETTINGS="1"
 export IS_DEVELOPER="1"
 
 parse_cli()
@@ -121,11 +121,24 @@ fancy_echo "Installing oh-my-zsh"
 if [ ! -d "$HOME/.oh-my-zsh" ]
 then
     sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sed 's:env zsh -l::g' | sed 's:chsh -s .*$::g')"
-
-    # Add missing asdf
-    wget https://raw.githubusercontent.com/asdf-vm/asdf/master/asdf.sh
-    source asdf.sh
 fi
+
+find_latest_asdf() {
+    asdf list-all "$1" | grep -v - | tail -1 | sed -e 's/^ *//'
+}
+
+asdf_plugin_present() {
+    $(asdf plugin-list | grep "$1" > /dev/null)
+    return $?
+}
+
+install_asdf_plugin()
+{
+    plugin_version=$(find_latest_asdf $1)
+    fancy_echo "Installing $1 $plugin_version"
+    asdf install $1 $plugin_version
+    asdf global $1 $plugin_version
+}
 
 if [ $IS_DEVELOPER ];
 then
@@ -183,10 +196,10 @@ then
         echo > ~/.git-authors
     fi
 
-    fancy_echo "Installing brew bundles..."
+    fancy_echo "Installing Brew bundles..."
     brew bundle
 
-    fancy_echo "Installing spacemacs"
+    fancy_echo "Installing Spacemacs"
     if [ ! -d "$HOME/.emacs.d" ]
     then
         git clone https://github.com/syl20bnr/spacemacs $HOME/.emacs.d
@@ -210,29 +223,12 @@ then
         git checkout "$(git describe --abbrev=0 --tags)"
     fi
 
-    . $HOME/.asdf/asdf.sh
-    . $HOME/.asdf/completions/asdf.bash
-
-    find_latest_asdf() {
-        asdf list-all "$1" | grep -v - | tail -1 | sed -e 's/^ *//'
-    }
-
-    asdf_plugin_present() {
-        $(asdf plugin-list | grep "$1" > /dev/null)
-        return $?
-    }
+    source $HOME/.asdf/asdf.sh
+    source $HOME/.asdf/completions/asdf.bash
 
     fancy_echo "Adding asdf plugins"
     asdf_plugin_present elixir || asdf plugin-add elixir https://github.com/asdf-vm/asdf-elixir.git
     asdf_plugin_present erlang || asdf plugin-add erlang https://github.com/asdf-vm/asdf-erlang.git
-
-    install_asdf_plugin()
-    {
-        plugin_version=$(find_latest_asdf $1)
-        fancy_echo "Installing $1 $plugin_version"
-        asdf install $1 $plugin_version
-        asdf global $1 $plugin_version
-    }
 
     fancy_echo "Installing asdf plugins"
     export KERL_CONFIGURE_OPTIONS="--disable-debug --without-javac"
@@ -277,8 +273,8 @@ fi
 fancy_echo "Installing Google Chrome"
 if [ ! -d "/Applications/googlechrome.app" ]
 then
-    curl -Lo ~/Downloads/googlechrome.app https://dl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg
-    sudo hdiutil attach ~/Downloads/googlechrome.app
+    curl -Lo ~/Downloads/googlechrome.dmg https://dl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg
+    sudo hdiutil attach ~/Downloads/googlechrome.dmg
     sudo cp -R "/Volumes/Google Chrome.app" /Applications
     sudo hdiutil unmount "/Volumes/Google Chrome"
 fi
