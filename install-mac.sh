@@ -59,8 +59,6 @@ parse_cli()
 
     if [ "$GITHUB_NAME" == "" ]; then printf "GITHUB_NAME is missing\n"; exit 1; fi
     if [ "$GITHUB_EMAIL" == "" ]; then printf "GITHUB_EMAIL is missing\n"; exit 1; fi
-
-    exit 0
 }
 
 fancy_echo()
