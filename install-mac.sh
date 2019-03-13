@@ -215,7 +215,7 @@ then
     fancy_echo "Installing Rust"
     sudo rustup-init -y
     echo "export PATH=$PATH:$HOME/.cargo/bin" >> ~/.zshrc
-    export PATH=$PATH:$HOME/.cargo/bin
+    source $HOME/.cargo/env
     rustup toolchain add nightly
     cargo +nightly install racer
     rustup component add rust-src
