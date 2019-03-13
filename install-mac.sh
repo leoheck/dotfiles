@@ -119,7 +119,7 @@ fi
 fancy_echo "Installing oh-my-zsh"
 if [ ! -d "$HOME/.oh-my-zsh" ]
 then
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh)"
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/robbyrussell/oh-my-zsh/master/tools/install.sh | sed 's:env zsh -l::g' | sed 's:chsh -s .*$::g')"
 fi
 
 fancy_echo "Installing Homebrew ..."
