@@ -63,7 +63,7 @@ parse_cli()
 
 fancy_echo()
 {
-    printf "\n\n>> %s\n" "$@"
+    printf "\n\n>> %s\n =====================================================" "$@"
 }
 
 set_hostname()
@@ -267,6 +267,15 @@ then
     sudo hdiutil attach ~/Downloads/GPG_Suite-2018.5.dmg
     sudo cp -R "/Volumes/GPG Suite/Install.app" /Applications
     sudo hdiutil unmount "/Volumes/GPG Suite"
+fi
+
+fancy_echo "Installing Google Chrome"
+if [ ! -d "/Applications/googlechrome.app" ]
+then
+    curl -Lo ~/Downloads/googlechrome.app URL
+    sudo hdiutil attach ~/Downloads/googlechrome.app
+    sudo cp -R "/Volumes/Google Chrome.app" /Applications
+    sudo hdiutil unmount "/Volumes/Google Chrome"
 fi
 
 fancy_echo "Installing Google Drive"
