@@ -274,6 +274,6 @@ if [ ! -d "/Applications/Google Drive File Stream.app" ]
 then
     curl -Lo ~/Downloads/GoogleDriveFileStream.dmg https://dl.google.com/drive-file-stream/GoogleDriveFileStream.dmg
     hdiutil mount ~/Downloads/GoogleDriveFileStream.dmg
-    sudo installer -pkg "/Volumes/Install Google Drive File Stream/GoogleDriveFileStream.pkg" -target "/Volumes/Macintosh HD"
+    sudo installer -pkg "/Volumes/Install Google Drive File Stream/GoogleDriveFileStream.pkg" -target "/dev/disk1s1"
     hdiutil unmount "/Volumes/Install Google Drive File Stream/"
 fi
