@@ -105,16 +105,17 @@ then
     sudo defaults write NSGlobalDomain com.apple.mouse.tapBehavior -int 1
 
     # Display only active applications in dock
-    defaults write com.apple.Dock static-only -bool TRUE
+    defaults write com.apple.dock static-only -bool TRUE
 
     # Enable the recent items menu
-    defaults write com.apple.Dock persistent-others -array-add '{"tile-data" = {"list-type" = 1;}; "tile-type" = "recents-tile";}'
+    defaults write com.apple.dock persistent-others -array-add '{"tile-data" = {"list-type" = 1;}; "tile-type" = "recents-tile";}'
 
     # Autohide dock
-    defaults write com.apple.Dock showhidden -bool TRUE
+    defaults write com.apple.dock showhidden -bool TRUE
 
     # Move the dock to the left
-    defaults write com.apple.Dock pinning -string left
+    defaults write com.apple.dock pinning -string "left"
+    defaults write com.apple.dock pinning "start"
 
     killall Dock
 fi
@@ -268,7 +269,7 @@ then
     fancy_echo "Installing GPG Suite"
     curl -Lo ~/Downloads/GPG_Suite-2018.5.dmg https://releases.gpgtools.org/GPG_Suite-2018.5.dmg
     sudo hdiutil attach ~/Downloads/GPG_Suite-2018.5.dmg
-    sudo cp -R "/Volumes/GPG Suite/Install.app" /Applications
+    sudo installer -pkg "/Volumes/GPG Suite/Install.pkg" -target "/dev/disk1s1"
     sudo hdiutil unmount "/Volumes/GPG Suite"
 fi
 
