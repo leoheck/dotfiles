@@ -271,7 +271,7 @@ then
 fi
 
 fancy_echo "Installing Google Chrome"
-if [ ! -d "/Applications/googlechrome.app" ]
+if [ ! -d "/Applications/Google Chrome.app" ]
 then
     curl -Lo ~/Downloads/googlechrome.dmg https://dl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg
     sudo hdiutil attach ~/Downloads/googlechrome.dmg
