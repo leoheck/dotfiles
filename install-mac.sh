@@ -193,7 +193,7 @@ then
     fi
 
     fancy_echo "Installing Rust"
-    sudo rustup-init -y
+    sudo -H rustup-init -y
     echo "export PATH=$PATH:$HOME/.cargo/bin" >> ~/.zshrc
     source $HOME/.cargo/env
     rustup toolchain add nightly
