@@ -273,7 +273,7 @@ fi
 fancy_echo "Installing Google Chrome"
 if [ ! -d "/Applications/googlechrome.app" ]
 then
-    curl -Lo ~/Downloads/googlechrome.app URL
+    curl -Lo ~/Downloads/googlechrome.app https://dl.google.com/chrome/mac/stable/GGRO/googlechrome.dmg
     sudo hdiutil attach ~/Downloads/googlechrome.app
     sudo cp -R "/Volumes/Google Chrome.app" /Applications
     sudo hdiutil unmount "/Volumes/Google Chrome"
