@@ -96,6 +96,8 @@ config()
 
 if [ $MAC_DEFAULT_SETTINGS ]
 then
+    fancy_echo "Configuring default MAC look and feel"
+
     # Tap to click
     defaults write com.apple.AppleMultitouchTrackpad Clicking -bool true
     sudo defaults write com.apple.driver.AppleBluetoothMultitouch.trackpad Clicking -bool true
