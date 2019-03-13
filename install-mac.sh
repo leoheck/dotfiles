@@ -165,24 +165,26 @@ then
     then
         fancy_echo "Installing git keys"
         fancy_echo "Writing to $HOME/.gitconfig"
-        echo "
+
+        read -r gitconfig_append <<-EOM
         [user]
             name = $GITHUB_NAME
             email = $GITHUB_EMAIL
-         " >> $HOME/.gitconfig
+        EOM
+        echo "$gitconfig_append" >> $HOME/.gitconfig
 
         fancy_echo "Generating & configuringssh keys"
         ssh-keygen -t rsa -b 4096 -C $GITHUB_EMAIL -N "" -f $HOME/.ssh/id_rsa
         eval "$(ssh-agent -s)"
 
         touch $HOME/.ssh/config
-        read -r -d '' sshconfig_append <<- EOM
+
+        read -r sshconfig_append <<-EOM
         Host *
             AddKeysToAgent yes
             UseKeychain yes
             IdentityFile $HOME/.ssh/id_rsa" >> $HOME/.ssh/config
         EOM
-
         echo "$sshconfig_append" >> $HOME/.ssh/config
 
         ssh-add -K $HOME/.ssh/id_rsa
@@ -190,13 +192,13 @@ then
         fancy_echo "Please copy your ssh public keys to github"
         open https://help.github.com/en/articles/adding-a-new-ssh-key-to-your-github-account
 
-        read -r -d '' gitconfig_append <<- EOM
+        read -r gitconfig_append <<-EOM
         [user]
             authors:
-                $USER: $GITHUB_NAME
+                $USER = $GITHUB_NAME
 
             email_addresses:
-                $USER: $GITHUB_EMAIL
+                $USER = $GITHUB_EMAIL
         EOM
 
         echo "$gitconfig_append" >> $HOME/.gitconfig
