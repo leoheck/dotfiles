@@ -242,7 +242,7 @@ then
     then
         fancy_echo "Installing Visual Studio Code"
         curl -Lo "~/Downloads/Visual Studio Code.zip" https://update.code.visualstudio.com/1.31.1/darwin/stable
-        unzip -a "~/Downloads/Visual Studio Code.zip" /Applications
+        unzip -a ~/Downloads/Visual\ Studio\ Code.zip -d /Applications
     fi
 
     if [ ! -d "/Applications/Docker.app" ]
